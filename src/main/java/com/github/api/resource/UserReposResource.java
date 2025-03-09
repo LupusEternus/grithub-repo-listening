@@ -1,6 +1,7 @@
 package com.github.api.resource;
 
 import com.github.api.service.GitHubReactiveService;
+import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -18,7 +19,7 @@ public class UserReposResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUser(@PathParam("username") String username){
+    public Uni<Response> getUser(@PathParam("username") String username){
         return gitHubService.getUser(username);
     }
 }

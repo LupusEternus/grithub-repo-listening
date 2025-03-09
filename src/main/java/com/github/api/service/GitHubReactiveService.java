@@ -2,6 +2,7 @@ package com.github.api.service;
 
 
 import com.github.api.client.GitHubReactiveClient;
+import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
@@ -14,9 +15,9 @@ public class GitHubReactiveService {
     @Inject
     GitHubReactiveClient gitHubClient;
 
-    public Response getUser(String username){
-        String gitHubResponse = gitHubClient.getUser(username);
-        return Response.ok(gitHubResponse).build();
+    public Uni<Response> getUser(String username){
+        return gitHubClient.getUser(username)
+                .onItem().transform(user -> Response.ok(user).build());
     }
 
 }

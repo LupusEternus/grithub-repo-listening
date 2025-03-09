@@ -1,5 +1,6 @@
 package com.github.api.client;
 
+import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
@@ -15,6 +16,6 @@ public interface GitHubReactiveClient {
     @GET
     @Path("/{username}")
     @Produces(MediaType.APPLICATION_JSON)
-    String getUser(@PathParam("username") String username);
+    Uni<String> getUser(@PathParam("username") String username);
 
 }
