@@ -3,6 +3,7 @@ package com.github.api.service;
 
 import com.github.api.client.GitHubReactiveClient;
 import dto.ErrorResponse;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -24,7 +25,11 @@ public class GitHubReactiveService {
     }
 
     private Uni<Response> processRepos(String username){
-        return Uni.createFrom().item(Response.ok().build());
+        return gitHubClient.getUserRepos(username)
+                .onItem().transformToMulti(repos -> Multi.createFrom().iterable(repos))
+                .filter(repo -> !repo.isFork())
+                .collect().asList()
+                .onItem().transform(list -> Response.ok(list).build());
     }
 
     private Response handleError(Throwable e,String username) {

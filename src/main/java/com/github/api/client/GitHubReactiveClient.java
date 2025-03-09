@@ -1,6 +1,6 @@
 package com.github.api.client;
 
-import dto.GtiHubRepo;
+import dto.GitHubRepo;
 import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -23,5 +23,5 @@ public interface GitHubReactiveClient {
     @GET
     @Path("/{username}/repos")
     @Produces(MediaType.APPLICATION_JSON)
-    Uni<List<GtiHubRepo>> getUserRepos(@PathParam("username") String username);
-}
+    Uni<List<GitHubRepo>> getUserRepos(@PathParam("username") String username);
+    }
