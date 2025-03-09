@@ -1,5 +1,6 @@
 package com.github.api.client;
 
+import dto.GitHubBranch;
 import dto.GitHubRepo;
 import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.GET;
@@ -24,4 +25,8 @@ public interface GitHubReactiveClient {
     @Path("/{username}/repos")
     @Produces(MediaType.APPLICATION_JSON)
     Uni<List<GitHubRepo>> getUserRepos(@PathParam("username") String username);
+
+    @GET
+    @Path("/repos/{owner}/{repo}/branches")
+    Uni<List<GitHubBranch>> getBranches(@PathParam("owner") String owner, @PathParam("repo") String repo);
     }
