@@ -13,7 +13,6 @@ import jakarta.ws.rs.core.Response;
 @Path("/api/user/{username}")
 public class UserReposResource {
 
-
     @Inject
     GitHubReactiveService gitHubService;
 

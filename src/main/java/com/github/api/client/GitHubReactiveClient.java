@@ -29,4 +29,4 @@ public interface GitHubReactiveClient {
     @GET
     @Path("/repos/{owner}/{repo}/branches")
     Uni<List<GitHubBranch>> getBranches(@PathParam("owner") String owner, @PathParam("repo") String repo);
-    }
+}

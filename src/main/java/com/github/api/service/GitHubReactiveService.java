@@ -22,36 +22,36 @@ public class GitHubReactiveService {
 
     public Uni<Response> getUserRepos(String username) {
         return gitHubClient.getUser(username)
-                .onItem().transformToUni(response-> processRepos(username))
-                .onFailure().recoverWithUni(e->Uni.createFrom().item(handleError(e,username)));
+                .onItem().transformToUni(response -> processRepos(username))
+                .onFailure().recoverWithUni(e -> Uni.createFrom().item(handleError(e, username)));
     }
 
-    private Uni<Response> processRepos(String username){
+    private Uni<Response> processRepos(String username) {
         return gitHubClient.getUserRepos(username)
                 .onItem().transformToMulti(repos -> Multi.createFrom().iterable(repos))
                 .filter(repo -> !repo.isFork())
                 .onItem().transformToUniAndMerge(repo ->
-                    gitHubClient.getBranches(repo.owner().login(), repo.name())
-                            .onItem().transform(branches -> mapToResponse(repo,branches))
+                        gitHubClient.getBranches(repo.owner().login(), repo.name())
+                                .onItem().transform(branches -> mapToResponse(repo, branches))
                 )
                 .collect().asList()
                 .onItem().transform(list -> Response.ok(list).build());
     }
 
-    private UserRepoResponse mapToResponse(GitHubRepo repo, List<GitHubBranch> branches){
+    private UserRepoResponse mapToResponse(GitHubRepo repo, List<GitHubBranch> branches) {
         return new UserRepoResponse(
                 repo.name(),
                 repo.owner().login(),
                 branches.stream()
-                        .map(b ->new BranchInfo(b.name(),b.commit().sha()))
+                        .map(b -> new BranchInfo(b.name(), b.commit().sha()))
                         .toList()
-                 );
+        );
     }
 
-    private Response handleError(Throwable e,String username) {
+    private Response handleError(Throwable e, String username) {
         if (e instanceof WebApplicationException wae) {
-            if(wae.getResponse().getStatus() == 404){
-                return buildError(404,"User: " + username + " not found");
+            if (wae.getResponse().getStatus() == 404) {
+                return buildError(404, "User: " + username + " not found");
             }
             return buildError(wae.getResponse().getStatus(), wae.getMessage());
         }
