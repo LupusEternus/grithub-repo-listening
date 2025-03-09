@@ -17,7 +17,7 @@ public class UserReposResource {
     GitHubReactiveService gitHubService;
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getUser(@PathParam("username") String username){
         return gitHubService.getUser(username);
     }

@@ -15,9 +15,8 @@ public class GitHubReactiveService {
     GitHubReactiveClient gitHubClient;
 
     public Response getUser(String username){
-        return Response.ok()
-                .entity(gitHubClient.getUser(username))
-                .build();
+        String gitHubResponse = gitHubClient.getUser(username);
+        return Response.ok(gitHubResponse).build();
     }
 
 }
