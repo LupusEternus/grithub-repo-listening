@@ -19,13 +19,19 @@ public class GitHubReactiveService {
 
     public Uni<Response> getUserRepos(String username) {
         return gitHubClient.getUser(username)
-                .onItem().transformToUni(response -> gitHubClient.getUser(username))
-                .onFailure().recoverWithItem(this::handleError);
-
+                .onItem().transformToUni(response-> processRepos(username))
+                .onFailure().recoverWithItem(handleError(new WebApplicationException("User not found",404),username));
     }
 
-    private Response handleError(Throwable e) {
+    private Uni<Response> processRepos(String username){
+        return Uni.createFrom().item(Response.ok().build());
+    }
+
+    private Response handleError(Throwable e,String username) {
         if (e instanceof WebApplicationException wae) {
+            if(wae.getResponse().getStatus() == 404){
+                return buildError(404,"User: " + username + " not found");
+            }
             return buildError(wae.getResponse().getStatus(), wae.getMessage());
         }
         return buildError(500, "Internal server error");
