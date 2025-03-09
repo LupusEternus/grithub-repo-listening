@@ -19,7 +19,7 @@ public class UserReposResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Uni<Response> getUser(@PathParam("username") String username){
-        return gitHubService.getUser(username);
+    public Uni<Response> getUser(@PathParam("username") String username) {
+        return gitHubService.getUserRepos(username);
     }
 }
